@@ -32,7 +32,7 @@ public class Main extends javax.swing.JFrame {
      */
     private String image_path;
     private int width, height;
-    private BufferedImage hasilGrayscale;
+    private BufferedImage hasilGrayscale, img;
     public Main() {
         initComponents();
     }
@@ -115,38 +115,17 @@ public class Main extends javax.swing.JFrame {
 			File selectedFile = jfc.getSelectedFile();
                         this.image_path = jfc.getSelectedFile().getPath();
                         try {
-                            BufferedImage img = ImageIO.read(new File(image_path));
-                            this.width = img.getWidth();
-                            this.height = img.getHeight();
+                            this.img = ImageIO.read(new File(image_path));
+                            this.width = this.img.getWidth();
+                            this.height = this.img.getHeight();
                             this.hasilGrayscale = new BufferedImage(this.width, this.height, BufferedImage.TYPE_BYTE_GRAY);
                             int[][] nilaiGraysalePixel = new int[this.width][this.height];
                             
-                            Image dimg = img.getScaledInstance(jLabel1.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
+                            Image dimg = this.img.getScaledInstance(jLabel1.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
                             ImageIcon icon = new ImageIcon(dimg);
                             jLabel1.setIcon(icon);
-                            int count = 1;
-                            int p,R,G,B,A,gs;
-                            for(int i=0;i<this.height;i++){
-                                for(int j=0;j<this.width;j++){
-                                    
-                                    //Color c = new Color(img.getRGB(j, i));
-                                    //System.out.println("S.No: " + count + " Red: " + c.getRed() +"  Green: " + c.getGreen() + " Blue: " + c.getBlue());
-                                    p = img.getRGB(j, i);
-                                    A = (p>>24) & 0xff;
-                                    R = (((p>>16) & 0xff)*5)/10;
-                                    G = (((p>>8) & 0xff)*8)/10;
-                                    B = ((p & 0xff)*3)/10;
-                                    gs = ((R+G+B)*10)/16;
-                                    //img.setRGB(j, i, ((gs << 16)+(gs << 8)+gs));
-                                    this.hasilGrayscale.setRGB(j, i, ((gs << 16)+(gs << 8)+gs));
-                                    count++;
-                                }
-                            }
-                            //File outputfile = new File("/home/jimmyferiawan/Desktop/saved.jpg");
-                            //ImageIO.write(this.hasilGrayscale, "jpg", outputfile);
-                            Image dimg1 = this.hasilGrayscale.getScaledInstance(jLabel1.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
-                            ImageIcon icon1 = new ImageIcon(dimg1);
-                            jLabel2.setIcon(icon1);
+                            this.grayscale();
+                            
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -156,14 +135,35 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        grayscale();
+        //this.grayscale();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    private static void grayscale() {
-        System.err.println("halo");
+    private void grayscale() {
+        int count = 1;
+            int p,R,G,B,A,gs;
+            for(int i=0;i<this.height;i++){
+                for(int j=0;j<this.width;j++){
+                    //Color c = new Color(img.getRGB(j, i));
+                    //System.out.println("S.No: " + count + " Red: " + c.getRed() +"  Green: " + c.getGreen() + " Blue: " + c.getBlue());
+                    p = this.img.getRGB(j, i);
+                    A = (p>>24) & 0xff;
+                    R = (((p>>16) & 0xff)*5)/10;
+                    G = (((p>>8) & 0xff)*8)/10;
+                    B = ((p & 0xff)*3)/10;
+                    gs = ((R+G+B)*10)/16;
+                    //img.setRGB(j, i, ((gs << 16)+(gs << 8)+gs));
+                    this.hasilGrayscale.setRGB(j, i, ((gs << 16)+(gs << 8)+gs));
+                    count++;
+                }
+            }
+            //File outputfile = new File("/home/jimmyferiawan/Desktop/saved.jpg");
+            //ImageIO.write(this.hasilGrayscale, "jpg", outputfile);
+            Image dimg1 = this.hasilGrayscale.getScaledInstance(jLabel1.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon icon1 = new ImageIcon(dimg1);
+            jLabel2.setIcon(icon1);
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
